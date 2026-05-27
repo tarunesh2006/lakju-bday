@@ -119,10 +119,12 @@ function renderLockScreen() {
 function renderIntroScreen() {
   return `
     <div class="screen fade-in flex-center">
-      <div class="intro-content glass luxury-border slide-up">
-        <div class="intro-illustration float-anim">🤍</div>
-        <h2 class="gold-accent">To my favorite person… ❤️</h2>
-        <h1 class="elegant-title">Happy 18th Birthday Lakshana 🎂✨</h1>
+      <div class="intro-content glass luxury-border slide-up" style="max-width: 550px; padding: 45px 35px;">
+        <div class="intro-illustration float-anim" style="margin-bottom: 25px; display: flex; justify-content: center;">
+          <img src="./images/tulips.png" alt="Tulip Bouquet" style="width: 190px; height: auto; filter: drop-shadow(0 10px 30px rgba(0, 136, 204, 0.45)) drop-shadow(0 5px 15px rgba(209, 26, 42, 0.3)); border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.15);" />
+        </div>
+        <h2 class="gold-accent" style="font-size: 1.4rem; letter-spacing: 1px; color: var(--gold-accent); margin-bottom: 8px;">To my favorite person… ❤️</h2>
+        <h1 class="elegant-title" style="font-size: 2.3rem; line-height: 1.35; margin-bottom: 25px;">Wishing You a Beautiful & Happy 18th Birthday, Lakshana 💐🎂✨</h1>
         <button class="primary-btn luxury-btn pulse" onclick="window.navigate('gifts')">Open your surprise 🎁</button>
       </div>
     </div>
@@ -481,10 +483,17 @@ function startBlessingSequence() {
 // 🎬 SCREEN 4.75: OUR STORY VIDEO
 function renderOurStoryScreen() {
   return `
-    <div class="screen video-screen" id="our-story-stage">
+    <div class="screen video-screen" id="our-story-stage" style="position: relative;">
       <div class="video-vignette"></div>
       <div class="video-gradient-overlay"></div>
       <div id="our-story-particles"></div>
+      
+      <!-- Tap to Pause Prompt -->
+      <div id="our-story-prompt" class="premium-glass" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; padding: 25px 40px; border-radius: 16px; text-align: center; max-width: 320px; border: 1.5px solid rgba(0, 136, 204, 0.45); box-shadow: 0 10px 40px rgba(0, 136, 204, 0.35); text-align: center; animation: slideUpReveal 0.6s ease-out;">
+        <p style="font-size: 1.15rem; color: #fff; margin-bottom: 20px; font-weight: 500; line-height: 1.6; letter-spacing: 0.5px;">💡 Hint: Tap the video to pause or play anytime.</p>
+        <button class="primary-btn luxury-btn" style="margin-top: 0; padding: 12px 30px; font-size: 1.1rem; border-radius: 25px; cursor: pointer; width: 100%;" onclick="window.startOurStoryPlay()">OK</button>
+      </div>
+
       <video
         id="our-story-video"
         class="cinematic-video"
@@ -496,6 +505,18 @@ function renderOurStoryScreen() {
     </div>
   `;
 }
+
+window.startOurStoryPlay = () => {
+  const prompt = document.getElementById('our-story-prompt');
+  if (prompt) prompt.style.display = 'none';
+  const video = document.getElementById('our-story-video');
+  if (video) {
+    video.play().catch(() => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
+  }
+};
 
 function startOurStorySequence() {
   const video = document.getElementById('our-story-video');
@@ -527,10 +548,6 @@ function startOurStorySequence() {
   
   video.muted = false;
   video.volume = 1;
-  video.play().catch(() => {
-    video.muted = true;
-    video.play().catch(() => {});
-  });
   
   video.addEventListener('ended', () => {
     const stage = document.getElementById('our-story-stage');
@@ -577,23 +594,37 @@ function renderCakeScreen() {
         <div class="mega-cake-art" id="mega-cake" style="margin-top: 50px;">
           <!-- Knife -->
           <div id="cake-knife" class="hidden">🔪</div>
-
-          <!-- Candles (Start Off) -->
-          <div class="candles" id="candles" style="opacity: 0; transition: opacity 1s;">
-            <div class="mega-flame custom-flame"></div>
-            <div class="mega-flame custom-flame"></div>
-            <div class="mega-flame custom-flame"></div>
-          </div>
           
           <!-- Cake Body (Split) -->
           <div class="mega-cake-body split-container">
             <div class="cake-half left-half">
-               <div class="cake-tier top half"></div>
-               <div class="cake-tier bottom half"></div>
+               <!-- Left Candles Wrapper -->
+               <div class="candles-wrapper left-candles" id="left-candles" style="opacity: 0; transition: opacity 1.2s ease;">
+                 <div class="candle c1"><div class="flame"></div></div>
+                 <div class="candle c2"><div class="flame"></div></div>
+                 <div class="candle c3"><div class="flame"></div></div>
+               </div>
+               <div class="cake-tier top half">
+                 <div class="frosting top-left-frosting"></div>
+               </div>
+               <div class="cake-tier bottom half">
+                 <div class="frosting bottom-left-frosting"></div>
+               </div>
             </div>
             <div class="cake-half right-half">
-               <div class="cake-tier top half right-clip"></div>
-               <div class="cake-tier bottom half right-clip"></div>
+               <!-- Right Candles Wrapper -->
+               <div class="candles-wrapper right-candles" id="right-candles" style="opacity: 0; transition: opacity 1.2s ease;">
+                 <div class="candle c4"><div class="flame"></div></div>
+                 <div class="candle c5"><div class="flame"></div></div>
+                 <div class="candle c6"><div class="flame"></div></div>
+                 <div class="candle c7"><div class="flame"></div></div>
+               </div>
+               <div class="cake-tier top half right-clip">
+                 <div class="frosting top-right-frosting"></div>
+               </div>
+               <div class="cake-tier bottom half right-clip">
+                 <div class="frosting bottom-right-frosting"></div>
+               </div>
             </div>
           </div>
         </div>
@@ -611,7 +642,7 @@ function renderCakeScreen() {
 // 🎬 SCREEN 6: CINEMATIC VIDEO
 function renderVideoScreen() {
   return `
-    <div class="screen video-screen" id="video-stage">
+    <div class="screen video-screen" id="video-stage" style="position: relative;">
       
       <!-- Cinematic vignette overlay -->
       <div class="video-vignette"></div>
@@ -622,6 +653,12 @@ function renderVideoScreen() {
       <!-- Minimal floating particles -->
       <div id="video-particles"></div>
       
+      <!-- Tap to Pause Prompt -->
+      <div id="video-prompt" class="premium-glass" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; padding: 25px 40px; border-radius: 16px; text-align: center; max-width: 320px; border: 1.5px solid rgba(209, 26, 42, 0.45); box-shadow: 0 10px 40px rgba(209, 26, 42, 0.35); text-align: center; animation: slideUpReveal 0.6s ease-out;">
+        <p style="font-size: 1.15rem; color: #fff; margin-bottom: 20px; font-weight: 500; line-height: 1.6; letter-spacing: 0.5px;">💡 Hint: Tap the video to pause or play anytime.</p>
+        <button class="primary-btn luxury-btn" style="margin-top: 0; padding: 12px 30px; font-size: 1.1rem; border-radius: 25px; cursor: pointer; width: 100%;" onclick="window.startCinematicPlay()">OK</button>
+      </div>
+
       <!-- Full-screen Video -->
       <video
         id="cinematic-video"
@@ -635,6 +672,18 @@ function renderVideoScreen() {
     </div>
   `;
 }
+
+window.startCinematicPlay = () => {
+  const prompt = document.getElementById('video-prompt');
+  if (prompt) prompt.style.display = 'none';
+  const video = document.getElementById('cinematic-video');
+  if (video) {
+    video.play().catch(() => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
+  }
+};
 
 // Video screen animation + audio orchestration
 function startVideoSequence() {
@@ -670,11 +719,6 @@ function startVideoSequence() {
   // Play video with audio (user has already interacted with the page)
   video.muted = false;
   video.volume = 1;
-  video.play().catch(() => {
-    // Fallback: if browser blocks unmuted autoplay, try muted
-    video.muted = true;
-    video.play().catch(() => {});
-  });
   
   // When video ends, fade out and go to apology
   video.addEventListener('ended', () => {
@@ -1052,16 +1096,16 @@ function getGiftHTML(id) {
           <p class="subtitle gold-accent text-glow">Every moment with you is my favorite story</p>
           
           <div class="scrapbook-gallery">
-            <div class="polaroid-item tilt-left delay-0" onclick="window.openLightbox('./images/pic%201.jpg')">
+            <div class="polaroid-item tilt-left delay-0" onclick="window.openLightbox('./images/new_pic_1.jpg')">
               <div class="tape"></div>
-              <img src="./images/pic%201.jpg" alt="Memory" loading="lazy"/>
+              <img src="./images/new_pic_1.jpg" alt="Memory" loading="lazy"/>
               <p class="polaroid-caption">💕</p>
               <div class="sparkle-little">✨</div>
             </div>
             
-            <div class="polaroid-item tilt-right delay-1" onclick="window.openLightbox('./images/pic%202.jpg')">
+            <div class="polaroid-item tilt-right delay-1" onclick="window.openLightbox('./images/new_pic_2.jpg')">
               <div class="tape tape-alt"></div>
-              <img src="./images/pic%202.jpg" alt="Memory" loading="lazy"/>
+              <img src="./images/new_pic_2.jpg" alt="Memory" loading="lazy"/>
               <p class="polaroid-caption">🫶</p>
             </div>
             
@@ -1143,7 +1187,7 @@ window.advanceCakeSequence = () => {
   window.cakeState++;
 
   if (window.cakeState === 1) { // Lights On
-    stage.style.background = '#2c1e16'; // dark brown warm background
+    stage.style.background = '#ff4a3f'; // gorgeous solid red-orange warm canvas matching the reference image!
     document.getElementById('light-bulbs').classList.remove('hidden');
     document.getElementById('light-bulbs').classList.add('drop-down');
     btn.innerText = "DECORATE CAKE";
@@ -1156,7 +1200,7 @@ window.advanceCakeSequence = () => {
   } else if (window.cakeState === 3) { // Balloons & Cake Reveal
     const bc = document.getElementById('balloons-container');
     bc.innerHTML = '';
-    const colors = ['#ff4d6d', '#d4af37', '#74b9ff', '#55efc4', '#a29bfe'];
+    const colors = ['#ff4d6d', '#0088cc', '#74b9ff', '#55efc4', '#a29bfe'];
     for(let i=0; i<15; i++) {
        let b = document.createElement('div');
        b.className = 'balloon';
@@ -1168,14 +1212,15 @@ window.advanceCakeSequence = () => {
     bc.classList.remove('hidden');
     
     document.getElementById('cake-reveal-container').classList.remove('hidden');
-    btn.innerText = "LIGHT CANDLE";
+    btn.innerText = "LIGHT CANDLES";
 
-  } else if (window.cakeState === 4) { // Light Candle
-    document.getElementById('candles').style.opacity = '1';
+  } else if (window.cakeState === 4) { // Light Candles
+    document.getElementById('left-candles').style.opacity = '1';
+    document.getElementById('right-candles').style.opacity = '1';
     btn.innerText = "BLOW CANDLES 💨";
 
-  } else if (window.cakeState === 5) { // Blow Candle
-    document.getElementById('candles').style.opacity = '0';
+  } else if (window.cakeState === 5) { // Blow Candles (realistic - turn off only the flames)
+    document.querySelectorAll('.flame').forEach(f => f.style.opacity = '0');
     btn.innerText = "CUT CAKE";
 
   } else if (window.cakeState === 6) { // Cut Cake
@@ -1223,7 +1268,7 @@ window.toggleMusic = () => {
 function startFloatingHearts() {
   const container = document.getElementById('hearts-container');
   if(!container) return;
-  const symbols = ['❤️', '✨', '💖', '💫'];
+  const symbols = ['🕸️', '🕷️', '❤️', '✨'];
   setInterval(() => {
     if(appState.currentScreen === 'bmw' || appState.currentScreen === 'ending') return;
     const heart = document.createElement('div');
